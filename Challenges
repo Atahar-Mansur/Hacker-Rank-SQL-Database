@@ -1,0 +1,39 @@
+select HACKER_ID, NAME, challenges_created
+from(
+    SELECT H.HACKER_ID, H.NAME, COUNT(C.challenge_ID) AS challenges_created
+    FROM Hackers AS H
+    INNER JOIN Challenges AS C ON H.HACKER_ID = C.HACKER_ID
+    GROUP BY H.HACKER_ID, H.NAME
+) as t2
+inner join(
+    select challenges_created as cha , count(t1.challenges_created) as similer_challenges_created
+    from(
+        SELECT H.HACKER_ID, H.NAME, COUNT(C.challenge_ID) AS challenges_created
+        FROM Hackers AS H
+        INNER JOIN Challenges AS C ON H.HACKER_ID = C.HACKER_ID
+        GROUP BY H.HACKER_ID, H.NAME
+    ) as t1
+    group by challenges_created
+    having count(t1.challenges_created) = 1
+) as t3 on t2.challenges_created = t3.cha
+
+union
+
+select HACKER_ID, NAME, challenges_created
+from(
+    SELECT H.HACKER_ID, H.NAME, COUNT(C.challenge_ID) AS challenges_created
+    FROM Hackers AS H
+    INNER JOIN Challenges AS C ON H.HACKER_ID = C.HACKER_ID
+    GROUP BY H.HACKER_ID, H.NAME
+) as t2
+inner join(
+    select max(t1.challenges_created) as max_challenges_created
+    from(
+        SELECT H.HACKER_ID, H.NAME, COUNT(C.challenge_ID) AS challenges_created
+        FROM Hackers AS H
+        INNER JOIN Challenges AS C ON H.HACKER_ID = C.HACKER_ID
+        GROUP BY H.HACKER_ID, H.NAME
+    ) as t1
+) as t3 on challenges_created = max_challenges_created
+
+ORDER BY t2.challenges_created DESC, t2.HACKER_ID
