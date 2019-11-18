@@ -1,0 +1,14 @@
+DECLARE @cnt INT = 1, @t INT, @s VARCHAR(100);
+
+WHILE @cnt <= 20
+BEGIN
+    SET @t = 1;
+    SET @s = '*';
+    WHILE @t < @cnt
+    BEGIN
+        SET @s = @s + ' *';
+        SET @t = @t + 1;
+    END
+    PRINT @s;
+   SET @cnt = @cnt + 1;
+END;
