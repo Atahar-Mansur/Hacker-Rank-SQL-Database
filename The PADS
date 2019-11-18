@@ -1,0 +1,18 @@
+Select case
+    when Occupation='Doctor' then name + '(D)'
+    when Occupation='Professor' then name + '(P)'
+    when Occupation='Singer' then name + '(S)'
+    else name+'(A)'
+    end as Result
+from OCCUPATIONS
+order by name
+
+select case
+        when Occupation = 'Doctor' then 'There are a total of '+ cast(count(Occupation) as varchar(10)) +' doctors.'
+        when Occupation = 'Professor' then 'There are a total of '+ cast(count(Occupation) as varchar(10)) +' professors.'
+        when Occupation = 'Singer' then 'There are a total of '+ cast(count(Occupation) as varchar(10)) +' singers.'
+        else 'There are a total of '+ cast(count(Occupation) as varchar(10)) +' actors.'
+        end as result
+from Occupations
+group by Occupation
+order by count(Occupation)
