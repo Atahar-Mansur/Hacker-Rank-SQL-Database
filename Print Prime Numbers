@@ -1,0 +1,53 @@
+DECLARE @prime TABLE (indx INT, val INT);
+DECLARE @i INT, @j INT, @e INT, @result VARCHAR(5000);
+
+--Sieve prccess to find prime
+
+set @i = 0;
+while @i <= 1000
+begin
+    insert into @prime values(@i,0);
+    set @i = @i + 1;
+end
+
+update @prime
+set val = 1
+where indx = 2;
+
+set @i = 3;
+while @i <= 1000
+begin
+    select @e = val from @prime where indx = @i;
+    if @e = 0
+    begin
+        update @prime set val = 1 where indx = @i;
+        
+        set @j = @i + @i;
+        while @j <= 1000
+        begin
+            update @prime set val = 2 where indx = @j;
+            set @j = @j + @i;
+        end
+    end
+    set @i = @i + 2;
+end
+
+--End of Sieve proccess
+
+--Print the primes
+
+set @result = '2';
+set @i = 3;
+while @i <= 1000
+begin
+    select @e = val from @prime where indx = @i;
+    if @e = 1
+    begin
+        set @result = @result + '&' + cast(@i as varchar(5));
+    end
+    set @i = @i + 1;
+end
+
+print @result;
+
+
