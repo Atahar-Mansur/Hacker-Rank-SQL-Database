@@ -1,0 +1,41 @@
+select D.name as Doctor, P.name as Professor, S.name as Singer, A.name as Actor
+from(
+    select O.name, ROW_NUMBER() over ( order by O.name ) AS RowNo
+from(
+    select OCCUPATION
+        from(
+            select OCCUPATION, count(OCCUPATION) as Total
+            from OCCUPATIONS
+            group by OCCUPATION
+        ) as t1
+        inner join(
+            select max(t3.Total) as MaxSize
+            from(
+                select OCCUPATION, count(OCCUPATION) as Total
+                from OCCUPATIONS
+                group by OCCUPATION
+            ) as t3
+        ) as t2 on t1.Total=t2.MaxSize
+    ) as t4
+    inner join OCCUPATIONS as O on t4.OCCUPATION=O.OCCUPATION
+) as Oc
+full outer join(
+    select name, ROW_NUMBER() over ( order by name ) AS RowNo    
+    from OCCUPATIONS
+    where OCCUPATION = 'Doctor'
+) as D on Oc.RowNo = D.RowNo
+full outer join(
+    select name, ROW_NUMBER() over ( order by name ) AS RowNo    
+    from OCCUPATIONS
+    where OCCUPATION = 'Professor'
+) as P on Oc.RowNo = P.RowNo
+full outer join(
+    select name, ROW_NUMBER() over ( order by name ) AS RowNo    
+    from OCCUPATIONS
+    where OCCUPATION = 'Singer'
+) as S on Oc.RowNo = S.RowNo
+full outer join(
+    select name, ROW_NUMBER() over ( order by name ) AS RowNo    
+    from OCCUPATIONS
+    where OCCUPATION = 'Actor'
+) as A on Oc.RowNo = A.RowNo
