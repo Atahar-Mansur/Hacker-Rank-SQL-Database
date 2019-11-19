@@ -1,0 +1,8 @@
+select n,
+case
+    when p is null then 'Root'
+    when exists(select n from BST where p = t1.n) then 'Inner'
+    else 'Leaf'
+    end as result
+from BST as t1
+order by n
