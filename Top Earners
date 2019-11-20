@@ -1,0 +1,10 @@
+declare @max_salary int, @no_of_employee int;
+
+select @max_salary = max(months*salary)
+from Employee;
+
+select @no_of_employee = count(months*salary)
+from Employee
+group by months*salary;
+
+print cast(@max_salary as varchar(50)) + '  ' + cast(@no_of_employee as varchar(50));
