@@ -1,0 +1,19 @@
+select t1.company_code, founder, lead_manager_code, senior_manager_code, manager_code, employee_code
+from Company t1
+inner join(
+    select company_code, count(distinct lead_manager_code) lead_manager_code
+    from Lead_Manager
+    group by company_code) t2 on t1.company_code = t2.company_code
+inner join(
+    select company_code, count(distinct senior_manager_code) senior_manager_code
+    from Senior_Manager
+    group by company_code) t3 on t1.company_code = t3.company_code
+inner join(
+    select company_code, count(distinct manager_code) manager_code
+    from Manager
+    group by company_code) t4 on t1.company_code = t4.company_code
+inner join(
+    select company_code, count(distinct employee_code) employee_code
+    from Employee
+    group by company_code) t5 on t1.company_code = t5.company_code
+order by t1.company_code
