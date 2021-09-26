@@ -1,0 +1,23 @@
+if (select count(LAT_N) from STATION) % 2 = 1
+begin
+    select cast(round(LAT_N, 4) as decimal(18,4))
+    from(
+        select ROW_NUMBER() OVER(ORDER BY LAT_N ASC) RawNumber, LAT_N from STATION
+        ) t1
+    where RawNumber = ((select count(LAT_N) from STATION) + 1) / 2
+end
+else
+begin
+    select 
+    cast(round((select LAT_N
+    from(
+        select ROW_NUMBER() OVER(ORDER BY LAT_N ASC) RawNumber, LAT_N from STATION
+        ) t1
+    where RawNumber = ((select count(LAT_N) from STATION)) / 2) +
+    (select LAT_N
+    from(
+        select ROW_NUMBER() OVER(ORDER BY LAT_N ASC) RawNumber, LAT_N from STATION
+        ) t1
+    where RawNumber = ((select count(LAT_N) from STATION)) / 2 + 1) / 2, 4) as decimal(18,4))
+
+end
